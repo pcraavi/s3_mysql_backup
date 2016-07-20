@@ -1,5 +1,8 @@
 import os
 import re
+import errno
+
+import subprocess
 from datetime import datetime as dt
 from datetime import timedelta as td
 import boto
@@ -74,12 +77,21 @@ def s3_key(bucket_name='php-apps-cluster'):
     return boto.s3.key.Key(bucket), bucket.list()
 
 
-def mkdirs(dir, writable=False):
-    if not os.path.exists(dir):
-        if not writable:
-            os.makedirs(dir, 0755)
+def mkdirs(path, writable=False):
+
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
         else:
-            os.makedirs(dir, 0777)
+            raise
+    if not writable:
+
+        subprocess.call(['chmod', '0755', path])
+    else:
+        subprocess.call(['chmod', '0777', path])
+
 
 
 def download_last_db_backup(db_backups_dir='backups', project_name='biz', bucket_name='php-apps-cluster'):
