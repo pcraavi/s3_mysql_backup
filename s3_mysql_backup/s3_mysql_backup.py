@@ -11,7 +11,7 @@ from boto.s3.key import Key
 from fabric.operations import local
 
 TIMESTAMP_FORMAT = '%Y-%m-%d-%H-%M-%S'
-
+DIR_CREATE_TIME_FORMAT = '%a %b %d %H:%M:%S %Y'
 
 def get_local_backups_by_pattern(pat, dir):
     bks = []
@@ -93,7 +93,6 @@ def mkdirs(path, writable=False):
         subprocess.call(['chmod', '0777', path])
 
 
-
 def download_last_db_backup(db_backups_dir='backups', project_name='biz', bucket_name='php-apps-cluster'):
     """
     download last project db backup from S3
@@ -125,6 +124,7 @@ def download_last_db_backup(db_backups_dir='backups', project_name='biz', bucket
 
         backup_list = sorted(
             backup_list, key=lambda k: k['date'], reverse=True)
+
         if len(backup_list) > 0:
             last_backup = backup_list[0]
             keyString = str(last_backup['key'].key)
