@@ -86,7 +86,7 @@ def mkdirs(path, writeable=False):
             pass
         else:
             raise
-    if not writable:
+    if not writeable:
 
         subprocess.call(['chmod', '0755', path])
     else:
