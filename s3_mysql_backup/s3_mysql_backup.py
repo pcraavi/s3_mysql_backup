@@ -77,7 +77,7 @@ def s3_key(bucket_name='php-apps-cluster'):
     return boto.s3.key.Key(bucket), bucket.list()
 
 
-def mkdirs(path, writable=False):
+def mkdirs(path, writeable=False):
 
     try:
         os.makedirs(path)
