@@ -13,6 +13,7 @@ from fabric.operations import local
 TIMESTAMP_FORMAT = '%Y-%m-%d-%H-%M-%S'
 DIR_CREATE_TIME_FORMAT = '%a %b %d %H:%M:%S %Y'
 
+
 def get_local_backups_by_pattern(pat, dir):
     bks = []
 
