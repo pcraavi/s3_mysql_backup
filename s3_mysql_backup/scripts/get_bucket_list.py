@@ -1,21 +1,19 @@
 import argparse
-
-from s3_mysql_backup.s3_mysql_backup import s3_bucket
+from s3_mysql_backup.s3_mysql_backup import s3_conn
 
 parser = argparse.ArgumentParser(
-    description='S3 bucket listing')
+    description='S3 bucket list')
 
-parser.add_argument('--bucket-name', required=True, help='Bucket Name', default='php-apps-cluster')
 parser.add_argument('--aws-access-key-id', required=True, help='AWS_ACCESS_KEY_ID', default='rrg')
 parser.add_argument('--aws-secret-access-key', required=True, help='AWS_SECRET_ACCESS_KEY', default='deadbeef')
 
 
-def get_bucket():
+def get_bucket_list():
     """
-    Get listing of S3 Bucket
+    Get list of S3 Buckets
     """
     args = parser.parse_args()
-
-    bucket = s3_bucket(args)
-    for b in bucket.list():
+    for b in s3_conn(args).get_all_buckets():
         print(''.join([i if ord(i) < 128 else ' ' for i in b.name]))
+
+

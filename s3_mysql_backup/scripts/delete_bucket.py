@@ -10,12 +10,10 @@ parser.add_argument('--aws-access-key-id', required=True, help='AWS_ACCESS_KEY_I
 parser.add_argument('--aws-secret-access-key', required=True, help='AWS_SECRET_ACCESS_KEY', default='deadbeef')
 
 
-def get_bucket():
+def delete_bucket():
     """
-    Get listing of S3 Bucket
+    Delete S3 Bucket
     """
-    args = parser.parse_args()
 
-    bucket = s3_bucket(args)
-    for b in bucket.list():
-        print(''.join([i if ord(i) < 128 else ' ' for i in b.name]))
+    s3_bucket(parser.parse_args()).delete()
+
