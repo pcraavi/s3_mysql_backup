@@ -2,10 +2,10 @@ import os
 from datetime import datetime as dt
 import boto
 import subprocess
-from s3_mysql_backup.s3_mysql_backup import s3_bucket
+from s3_mysql_backup import s3_bucket
 from s3_mysql_backup import TIMESTAMP_FORMAT
-from s3_mysql_backup.s3_mysql_backup import delete_expired_backups_in_bucket
-from s3_mysql_backup.s3_mysql_backup import delete_local_db_backups
+from s3_mysql_backup import delete_expired_backups_in_bucket
+from s3_mysql_backup import delete_local_db_backups
 
 
 def backup_db(args):

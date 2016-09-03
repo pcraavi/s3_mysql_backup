@@ -5,7 +5,7 @@ from datetime import timedelta as td
 import re
 
 from s3_mysql_backup import get_local_backups_by_pattern
-from s3_mysql_backup.s3_mysql_backup import s3_bucket
+from s3_mysql_backup import s3_bucket
 
 parser = argparse.ArgumentParser(description='S3 Gnucach Backups')
 
