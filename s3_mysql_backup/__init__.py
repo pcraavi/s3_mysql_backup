@@ -61,7 +61,7 @@ def delete_local_db_backups(pat, args):
     #
 
     backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
-    for dirName, subdirList, filelist in os.walk(args.backup_dir, topdown=False):
+    for dirName, subdirList, filelist in os.walk(args.db_backups_dir, topdown=False):
         for f in filelist:
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
