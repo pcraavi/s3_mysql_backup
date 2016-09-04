@@ -27,13 +27,18 @@ def backup_db(args):
     print 'Dumping database %s to %s.bz2' % (args.project_name, sql_file)
 
     sql_full_target = os.path.join(args.db_backups_dir, sql_file)
-    subprocess.call_check('mysqldump -h"%s" -P"%s" -uroot -p"%s" %s > %s' % (
-        args.mysql_host, args.mysql_port, args.db_pass, args.project_name, sql_full_target))
-    subprocess.call_check('bzip2 %s' % sql_full_target)
+    f = open(sql_full_target, "wb")
+    cmd = '/usr/bin/mysqldump -h%s -P%s -uroot -p%s %s ' % (
+        args.mysql_host, args.mysql_port, args.db_pass, args.project_name)
+    print(cmd)
+    subprocess.call(cmd.split(), stdout=f)
+    cmd = '/usr/bin/bzip2 %s' % sql_full_target
+    print(cmd)
+    subprocess.call(cmd.split())
     # append '.bz2'
     sql_local_full_target = sql_full_target
     sql_full_target = '%s.bz2' % os.path.join(args.db_backups_dir, sql_file)
-    target_name = os.path.join(args.s3folder, os.path.basename(sql_full_target))
+    target_name = sql_full_target
 
     key.key = target_name
     print 'Uploading STARTING %s to %s: %s' % (sql_file, target_name, dt.now())
