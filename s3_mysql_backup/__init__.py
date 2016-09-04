@@ -57,8 +57,10 @@ def delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=
 
 def download_last_db_backup(args):
     matches = []
+    print('looking for pat "%s" in bucket %s' % (args.pat, args.bucket_name))
     for f in args.bucketlist:
         if re.match(args.pat, f.name):
+            print('%s matches' % f.name)
             bk_date = dt.strptime(f.name[0:19], TIMESTAMP_FORMAT)
             matches.append({
                 'key': f,
@@ -67,13 +69,14 @@ def download_last_db_backup(args):
             })
     if matches:
         last_bk = sorted(matches, key=operator.itemgetter('date'))[0]
-        dest = os.path.join(args.db_backups_dir, last_bk.file)
+        dest = os.path.join(args.db_backups_dir, last_bk['file'])
         if not os.path.exists(dest):
-
-            last_bk.get_contents_to_filename(dest)
+            last_bk['key'].get_contents_to_filename(dest)
             print('Downloaded %s to %s' % (f.name, dest))
         else:
             print('Last backup %s already exists' % dest)
+    else:
+        print('no matches')
 
 
 def delete_local_db_backups(pat, args):
@@ -82,7 +85,7 @@ def delete_local_db_backups(pat, args):
     #
 
     backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
-    for dirName, subdirList, filelist in os.walk(args.db_backups_dirFd, topdown=False):
+    for dirName, subdirList, filelist in os.walk(args.db_backups_dir, topdown=False):
         for f in filelist:
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
