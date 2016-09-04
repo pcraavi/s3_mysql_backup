@@ -35,14 +35,13 @@ def backup_db(args):
     cmd = '/usr/bin/bzip2 %s' % sql_full_target
     print(cmd)
     subprocess.call(cmd.split())
-    # append '.bz2'
     sql_local_full_target = sql_full_target
-
+    # append '.bz2'
     key.key = '%s.bz2' % sql_file
-    print 'Uploading STARTING %s to %s: %s' % (sql_file, key.key, dt.now())
+    print 'STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now())
     try:
         key.set_contents_from_filename(sql_full_target)
-        print 'Upload %s FINISHED: %s' % (sql_local_full_target, dt.now())
+        print 'Upload pf %s FINISHED: %s' % (sql_local_full_target, dt.now())
     finally:
         delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=args.backup_aging_time)
         delete_local_db_backups(pat, backup_aging_time=args.backup_aging_time)
