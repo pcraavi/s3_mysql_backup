@@ -37,11 +37,9 @@ def backup_db(args):
     subprocess.call(cmd.split())
     # append '.bz2'
     sql_local_full_target = sql_full_target
-    sql_full_target = '%s.bz2' % os.path.join(args.db_backups_dir, sql_file)
-    target_name = sql_full_target
 
-    key.key = target_name
-    print 'Uploading STARTING %s to %s: %s' % (sql_file, target_name, dt.now())
+    key.key = '%s.bz2' % sql_file
+    print 'Uploading STARTING %s to %s: %s' % (sql_file, key.key, dt.now())
     try:
         key.set_contents_from_filename(sql_full_target)
         print 'Upload %s FINISHED: %s' % (sql_local_full_target, dt.now())
