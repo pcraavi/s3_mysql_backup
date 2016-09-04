@@ -21,15 +21,15 @@ def backup_db(args):
 
     bucketlist = bucket.list()
 
-    pat = "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-%s.sql.bz2" % args.project_name
+    pat = "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-%s.sql.bz2" % args.database
 
-    sql_file = '%s-%s.sql' % (dt.now().strftime(TIMESTAMP_FORMAT), args.project_name)
-    print 'Dumping database %s to %s.bz2' % (args.project_name, sql_file)
+    sql_file = '%s-%s.sql' % (dt.now().strftime(TIMESTAMP_FORMAT), args.database)
+    print 'Dumping database %s to %s.bz2' % (args.database, sql_file)
 
     sql_full_target = os.path.join(args.db_backups_dir, sql_file)
     f = open(sql_full_target, "wb")
     cmd = '/usr/bin/mysqldump -h%s -P%s -uroot -p%s %s ' % (
-        args.mysql_host, args.mysql_port, args.db_pass, args.project_name)
+        args.mysql_host, args.mysql_port, args.db_pass, args.database)
     print(cmd)
     subprocess.call(cmd.split(), stdout=f)
     cmd = '/usr/bin/bzip2 %s' % sql_full_target
