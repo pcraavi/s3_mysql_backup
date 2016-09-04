@@ -40,8 +40,8 @@ def backup_db(args):
     key.key = '%s.bz2' % sql_file
     print 'STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now())
     try:
-        key.set_contents_from_filename(os.path.join(args.db_backups_dir, sql_full_target))
-        print 'Upload pf %s FINISHED: %s' % (sql_local_full_target, dt.now())
+        key.set_contents_from_filename('%s.bz2' % os.path.join(args.db_backups_dir, sql_full_target))
+        print 'Upload of %s FINISHED: %s' % (sql_local_full_target, dt.now())
     finally:
         delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=args.backup_aging_time)
         delete_local_db_backups(pat, backup_aging_time=args.backup_aging_time)
