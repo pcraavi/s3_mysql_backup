@@ -1,7 +1,7 @@
 import os
 import re
 import errno
-
+import operator
 import subprocess
 from datetime import datetime as dt
 from datetime import timedelta as td
@@ -55,13 +55,34 @@ def delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=
                 bucket.delete_key(f.name)
 
 
+def download_last_db_backup(args):
+    matches = []
+    for f in args.bucketlist:
+        if re.match(args.pat, f.name):
+            bk_date = dt.strptime(f.name[0:19], TIMESTAMP_FORMAT)
+            matches.append({
+                'key': f,
+                'file': f.name,
+                'date': bk_date
+            })
+    if matches:
+        last_bk = sorted(matches, key=operator.itemgetter('date'))[0]
+        dest = os.path.join(args.db_backups_dir, last_bk.file)
+        if not os.path.exists(dest):
+
+            last_bk.get_contents_to_filename(dest)
+            print('Downloaded %s to %s' % (f.name, dest))
+        else:
+            print('Last backup %s already exists' % dest)
+
+
 def delete_local_db_backups(pat, args):
     #
     # Delete old local backups
     #
 
     backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
-    for dirName, subdirList, filelist in os.walk(args.db_backups_dir, topdown=False):
+    for dirName, subdirList, filelist in os.walk(args.db_backups_dirFd, topdown=False):
         for f in filelist:
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
