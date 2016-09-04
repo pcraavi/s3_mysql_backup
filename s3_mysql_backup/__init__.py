@@ -6,6 +6,8 @@ import subprocess
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+import boto
+
 YMD_FORMAT = '%Y-%m-%d'
 TIMESTAMP_FORMAT = '%Y-%m-%d-%H-%M-%S'
 DIR_CREATE_TIME_FORMAT = '%a %b %d %H:%M:%S %Y'
