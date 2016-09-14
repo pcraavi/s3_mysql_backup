@@ -107,6 +107,7 @@ setup(
             's3-get-bucket-list=s3_mysql_backup.scripts.get_bucket_list:get_bucket_list',
             's3-backup-qb=s3_mysql_backup.scripts.backup_qb:backup',
             's3-backup-gnucash=s3_mysql_backup.scripts.backup_gnucash:backup',
+            's3-backup-dir=s3_mysql_backup.scripts.backup_dir:backup_dir',
         ],
     },
 )
