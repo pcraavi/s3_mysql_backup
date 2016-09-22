@@ -24,10 +24,10 @@ def s3_get_dir_backup(args):
     bucket = s3_bucket(args)
     bucketlist = bucket.list()
     for f in bucketlist:
-        print(f.name)
-        if re.match(pat, f.name):
+        
+        if re.search(pat + '$', f.name):
             print('%s matches' % f.name)
-            bk_date = dt.strptime(f.name[0:19], TIMESTAMP_FORMAT)
+            bk_date = dt.strptime(f.name.replace(args.s3_folder + '/', '')[0:19], TIMESTAMP_FORMAT)
             matches.append({
                 'key': f,
                 'file': f.name,
@@ -35,7 +35,7 @@ def s3_get_dir_backup(args):
             })
     if matches:
         last_bk = sorted(matches, key=operator.itemgetter('date'))[0]
-        dest = os.path.join(args.zip_backups_dir, last_bk['file'])
+        dest = os.path.join(args.zip_backups_dir, last_bk['file'].replace(args.s3_folder + '/', ''))
         if not os.path.exists(dest):
             last_bk['key'].get_contents_to_filename(dest)
             print('Downloaded %s to %s' % (f.name, dest))
@@ -66,7 +66,7 @@ def backup(args):
     os.system('zip -r %s %s' % (zip_full_target, args.datadir))
 
     zip_local_full_target = zip_full_target
-    # append '.bz2'
+    # append '.zip'
     key.key = '%s/%s' % (args.s3_folder, zip_file)
     print 'STARTING upload of %s to %s: %s' % (zip_file, key.key, dt.now())
     try:
