@@ -79,6 +79,21 @@ def download_last_db_backup(args):
         print('no matches')
 
 
+def delete_local_zip_backups(pat, args):
+    #
+    # Delete old local backups
+    #
+
+    backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
+    for dirName, subdirList, filelist in os.walk(args.zip_backups_dir, topdown=False):
+        for f in filelist:
+            if re.search(pat, f):
+                bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
+                if bk_date < backup_expiration_date:
+                    print 'Removing old local backup %s' % f
+                    os.remove(os.path.join(dirName, f))
+
+
 def delete_local_db_backups(pat, args):
     #
     # Delete old local backups

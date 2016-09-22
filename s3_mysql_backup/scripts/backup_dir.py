@@ -1,6 +1,6 @@
 import argparse
 
-from s3_mysql_backup.backup_dir import backup_dir as s3_backup_dir
+from s3_mysql_backup.backup_dir import backup as s3_backup_dir
 
 parser = argparse.ArgumentParser(description='S3 Datadir Backup')
 
@@ -19,7 +19,7 @@ parser.add_argument('--backup-aging-time', help='delete backups older than backu
 parser.add_argument('project', help='project name')
 
 
-def backup_datadir():
+def backup():
     """
     zips into args.db_backups_dir and uploads to args.bucket_name/args.s3_folder
     fab -f ./fabfile.py backup_dbs

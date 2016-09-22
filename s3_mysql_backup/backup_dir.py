@@ -4,10 +4,10 @@ import boto
 from s3_mysql_backup import s3_bucket
 from s3_mysql_backup import TIMESTAMP_FORMAT
 from s3_mysql_backup import delete_expired_backups_in_bucket
-from s3_mysql_backup import delete_local_db_backups
+from s3_mysql_backup import delete_local_zip_backups
 
 
-def backup_dir(args):
+def backup(args):
     """
     zips dir into /backups, uploads to s3, deletes backups older than args.backup_aging_time.
     fab -f ./fabfile.py backup_dbs
@@ -24,7 +24,7 @@ def backup_dir(args):
 
     zip_file = '%s-%s.zip' % (dt.now().strftime(TIMESTAMP_FORMAT), args.project)
     print 'Zipping datadir %s to %s' % (args.datadir, zip_file)
-    zip_full_target = os.path.join(args.db_backups_dir, zip_file)
+    zip_full_target = os.path.join(args.zip_backups_dir, zip_file)
     os.system('zip -r %s %s' % (zip_full_target, args.datadir))
 
     zip_local_full_target = zip_full_target
@@ -36,4 +36,4 @@ def backup_dir(args):
         print 'Upload of %s FINISHED: %s' % (zip_local_full_target, dt.now())
     finally:
         delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=args.backup_aging_time)
-        delete_local_db_backups(pat, args)
+        delete_local_zip_backups(pat, args)
