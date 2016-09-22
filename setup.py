@@ -108,6 +108,7 @@ setup(
             's3-backup-qb=s3_mysql_backup.scripts.backup_qb:backup',
             's3-backup-gnucash=s3_mysql_backup.scripts.backup_gnucash:backup',
             's3-backup-dir=s3_mysql_backup.scripts.backup_dir:backup',
+            's3-get-dir-backup=s3_mysql_backup.scripts.get_dir_backup:get_dir_backup',
         ],
     },
 )
