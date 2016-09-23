@@ -111,4 +111,6 @@ setup(
             's3-get-dir-backup=s3_mysql_backup.scripts.get_dir_backup:get_dir_backup',
         ],
     },
+    setup_requires=['pytest-runner', ],
+    tests_require=['pytest', ],
 )

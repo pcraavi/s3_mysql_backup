@@ -18,7 +18,7 @@ def copy_file(args):
     if args.s3_folder:
         target_name = '%s/%s' % (args.s3_folder, os.path.basename(args.file))
     else:
-        target_name = args.file
+        target_name = os.path.basename(args.file)
 
     key.key = target_name
     print('Uploading %s to %s' % (args.file, target_name))
