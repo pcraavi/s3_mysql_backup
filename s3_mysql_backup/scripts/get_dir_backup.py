@@ -18,8 +18,6 @@ def get_dir_backup():
     """
     retrieves directory backup
     """
-
     args = parser.parse_args()
-
     s3_get_dir_backup(args)
 
