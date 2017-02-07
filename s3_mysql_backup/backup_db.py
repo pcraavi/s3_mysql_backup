@@ -12,8 +12,14 @@ def backup_db(
         aws_access_key_id,
         aws_secret_access_key,
         bucket_name,
+        s3_folder,
         database,
-        mysql_host, mysql_port, db_pass, db_backups_dir, backup_aging_time):
+        mysql_host,
+        mysql_port, 
+        db_user, 
+        db_pass, 
+        db_backups_dir, 
+        backup_aging_time):
     """
     dumps databases into /backups, uploads to s3, deletes backups older than a month
     fab -f ./fabfile.py backup_dbs
@@ -43,7 +49,7 @@ def backup_db(
 
     sql_full_target = os.path.join(db_backups_dir, sql_file)
     f = open(sql_full_target, "wb")
-    cmd = '/usr/bin/mysqldump -h%s -P%s -uroot -p%s %s ' % (mysql_host, mysql_port, db_pass, database)
+    cmd = '/usr/bin/mysqldump -h%s -P%s -u%s -p%s %s ' % (mysql_host, mysql_port, db_user, db_pass, database)
     print(cmd)
     subprocess.call(cmd.split(), stdout=f)
     cmd = '/usr/bin/bzip2 %s' % sql_full_target
@@ -51,7 +57,7 @@ def backup_db(
     subprocess.call(cmd.split())
     sql_local_full_target = sql_full_target
     # append '.bz2'
-    key.key = '%s.bz2' % sql_file
+    key.key = os.path.join(s3_folder, '%s.bz2' % sql_file)
     print 'STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now())
     try:
         key.set_contents_from_filename('%s.bz2' % os.path.join(db_backups_dir, sql_full_target))
