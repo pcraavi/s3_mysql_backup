@@ -17,6 +17,16 @@ def backup_db(
     """
     dumps databases into /backups, uploads to s3, deletes backups older than a month
     fab -f ./fabfile.py backup_dbs
+    :param aws_access_key_id:
+    :param aws_secret_access_key:
+    :param bucket_name:
+    :param database:
+    :param mysql_host:
+    :param mysql_port:
+    :param db_pass:
+    :param db_backups_dir:
+    :param backup_aging_time:
+    :return:
     """
 
     #  Connect to the bucket
