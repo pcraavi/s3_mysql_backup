@@ -14,6 +14,6 @@ def delete_bucket():
     """
     Delete S3 Bucket
     """
-
-    s3_bucket(parser.parse_args()).delete()
+    args = parser.parse_args
+    s3_bucket(args.aws_access_key_id, args.aws_secret_access_key, args.bucket_name)().delete()
 

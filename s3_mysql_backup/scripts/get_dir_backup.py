@@ -19,5 +19,10 @@ def get_dir_backup():
     retrieves directory backup
     """
     args = parser.parse_args()
-    s3_get_dir_backup(args)
+    s3_get_dir_backup(
+        args.aws_access_key_id,
+        args.aws_secret_access_key,
+        args.bucket_name,
+        args.s3_folder,
+        args.zip_backups_dir, args.project)
 

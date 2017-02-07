@@ -16,6 +16,6 @@ def get_bucket():
     """
     args = parser.parse_args()
 
-    bucket = s3_bucket(args)
+    bucket = s3_bucket(args.aws_access_key_id, args.aws_secret_access_key, args.bucket_name)
     for b in bucket.list():
         print(''.join([i if ord(i) < 128 else ' ' for i in b.name]))

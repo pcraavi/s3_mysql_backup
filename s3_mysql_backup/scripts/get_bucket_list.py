@@ -13,7 +13,7 @@ def get_bucket_list():
     Get list of S3 Buckets
     """
     args = parser.parse_args()
-    for b in s3_conn(args).get_all_buckets():
+    for b in s3_conn(args.aws_access_key_id, args.aws_secret_access_key).get_all_buckets():
         print(''.join([i if ord(i) < 128 else ' ' for i in b.name]))
 
 

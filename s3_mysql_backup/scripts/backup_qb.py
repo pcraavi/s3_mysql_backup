@@ -25,7 +25,7 @@ pat = "ROCKETS_REDGLARE_2005 \(Backup [A-Z][a-z][a-z] [0-9][0-9],[0-9][0-9][0-9]
 def backup():
 
     args = parser.parse_args()
-    bucket = s3_bucket(args)
+    bucket = s3_bucket(args.aws_access_key_id, args.aws_secret_access_key, args.bucket_name)
     key = boto.s3.key.Key(bucket)
     #
     # Get list of local QB and Gnucash Backups
@@ -48,4 +48,4 @@ def backup():
             key.set_contents_from_filename(qb_bks[0]['fullpath'])
             print 'upload %s FINISHED: %s' % (qb_bks[0]['filename'], dt.now())
 
-    delete_old_s3_qb_backups(args, s3_backups, bucket)
+    delete_old_s3_qb_backups(args.backup_aging_time, s3_backups, bucket)

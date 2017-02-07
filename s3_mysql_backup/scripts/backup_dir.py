@@ -21,11 +21,16 @@ parser.add_argument('project', help='project name')
 
 def backup():
     """
-    zips into args.db_backups_dir and uploads to args.bucket_name/args.s3_folder
+    zips into db_backups_dir and uploads to bucket_name/s3_folder
     fab -f ./fabfile.py backup_dbs
     """
 
     args = parser.parse_args()
 
-    s3_backup_dir(args)
+    s3_backup_dir(
+        args.datadir,
+        args.aws_access_key_id,
+        args.aws_secret_access_key,
+        args.bucket_name,
+        args.zip_backups_dir, args.backup_aging_time, args.s3_folder, args.project)
 

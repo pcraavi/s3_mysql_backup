@@ -5,22 +5,22 @@ import boto
 from s3_mysql_backup import s3_bucket
 
 
-def copy_file(args):
+def copy_file(aws_access_key_id, aws_secret_access_key, bucket_name, file, s3_folder):
     """
-    copies args.file to args.bucket args.s3_folder
+    copies file to bucket s3_folder
     """
 
     #  Connect to the bucket
 
-    bucket = s3_bucket(args)
+    bucket = s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name)
     key = boto.s3.key.Key(bucket)
 
-    if args.s3_folder:
-        target_name = '%s/%s' % (args.s3_folder, os.path.basename(args.file))
+    if s3_folder:
+        target_name = '%s/%s' % (s3_folder, os.path.basename(file))
     else:
-        target_name = os.path.basename(args.file)
+        target_name = os.path.basename(file)
 
     key.key = target_name
-    print('Uploading %s to %s' % (args.file, target_name))
-    key.set_contents_from_filename(args.file)
-    print('Upload %s FINISHED: %s' % (args.file, dt.now()))
+    print('Uploading %s to %s' % (file, target_name))
+    key.set_contents_from_filename(file)
+    print('Upload %s FINISHED: %s' % (file, dt.now()))

@@ -17,20 +17,20 @@ def qb_file_date(fname):
     return dt.strptime(fname[30:len(fname) - 5], qb_date_format)
 
 
-def delete_old_s3_gnu_backups(args, s3_backups, bucket):
+def delete_old_s3_gnu_backups(backup_aging_time, s3_backups, bucket):
     # don't delete last 2 without regard to age
-    # don't delete < args.backup_aging_time
+    # don't delete < backup_aging_time
     for f in s3_backups[0:len(s3_backups) - 2]:
-        if gnu_file_date(f.name) < dt.now() - td(args.backup_aging_time):
+        if gnu_file_date(f.name) < dt.now() - td(backup_aging_time):
             bucket.delete_key(f.name)
             print 'Deleted %s ' % f.name
 
 
-def delete_old_s3_qb_backups(args, s3_backups, bucket):
+def delete_old_s3_qb_backups(backup_aging_time, s3_backups, bucket):
     # don't delete last 2 without regard to age
-    # don't delete < args.backup_aging_time
+    # don't delete < backup_aging_time
     for f in s3_backups[0:len(s3_backups) - 2]:
-        if qb_file_date(f.name) < dt.now() - td(args.backup_aging_time):
+        if qb_file_date(f.name) < dt.now() - td(backup_aging_time):
             bucket.delete_key(f.name)
             print 'Deleted %s ' % f.name
 

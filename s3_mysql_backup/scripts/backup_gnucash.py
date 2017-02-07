@@ -21,9 +21,9 @@ parser.add_argument('--backup-aging-time', help='delete backups older than backu
 pat = "Personal041008.[0-9]*.gnucash.[0-9]*.gnucash.[0-9]*.gnucash$"
 
 
-def backup():
+def backup(aws_access_key_id, aws_secret_access_key, bucket_name):
     args = parser.parse_args()
-    bucket = s3_bucket(args)
+    bucket = s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name)
     key = boto.s3.key.Key(bucket)
     #
     # Get list of local QB and Gnucash Backups
@@ -45,5 +45,5 @@ def backup():
                 args.bucket_name, g_bks[0]['filename'], key.key, dt.now())
             key.set_contents_from_filename(g_bks[0]['fullpath'])
             print 'Upload %s FINISHED: %s' % (g_bks[0]['filename'], dt.now())
-    delete_old_s3_gnu_backups(args, s3_backups, bucket)
+    delete_old_s3_gnu_backups(args.backup_aging_time, s3_backups, bucket)
 

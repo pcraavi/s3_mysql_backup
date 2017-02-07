@@ -8,7 +8,12 @@ from s3_mysql_backup import delete_expired_backups_in_bucket
 from s3_mysql_backup import delete_local_db_backups
 
 
-def backup_db(args):
+def backup_db(
+        aws_access_key_id,
+        aws_secret_access_key,
+        bucket_name,
+        database,
+        mysql_host, mysql_port, db_pass, db_backups_dir, backup_aging_time):
     """
     dumps databases into /backups, uploads to s3, deletes backups older than a month
     fab -f ./fabfile.py backup_dbs
@@ -16,20 +21,19 @@ def backup_db(args):
 
     #  Connect to the bucket
 
-    bucket = s3_bucket(args)
+    bucket = s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name)
     key = boto.s3.key.Key(bucket)
 
     bucketlist = bucket.list()
 
-    pat = "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-%s.sql.bz2" % args.database
+    pat = "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-%s.sql.bz2" % database
 
-    sql_file = '%s-%s.sql' % (dt.now().strftime(TIMESTAMP_FORMAT), args.database)
-    print 'Dumping database %s to %s.bz2' % (args.database, sql_file)
+    sql_file = '%s-%s.sql' % (dt.now().strftime(TIMESTAMP_FORMAT), database)
+    print 'Dumping database %s to %s.bz2' % (database, sql_file)
 
-    sql_full_target = os.path.join(args.db_backups_dir, sql_file)
+    sql_full_target = os.path.join(db_backups_dir, sql_file)
     f = open(sql_full_target, "wb")
-    cmd = '/usr/bin/mysqldump -h%s -P%s -uroot -p%s %s ' % (
-        args.mysql_host, args.mysql_port, args.db_pass, args.database)
+    cmd = '/usr/bin/mysqldump -h%s -P%s -uroot -p%s %s ' % (mysql_host, mysql_port, db_pass, database)
     print(cmd)
     subprocess.call(cmd.split(), stdout=f)
     cmd = '/usr/bin/bzip2 %s' % sql_full_target
@@ -40,8 +44,8 @@ def backup_db(args):
     key.key = '%s.bz2' % sql_file
     print 'STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now())
     try:
-        key.set_contents_from_filename('%s.bz2' % os.path.join(args.db_backups_dir, sql_full_target))
+        key.set_contents_from_filename('%s.bz2' % os.path.join(db_backups_dir, sql_full_target))
         print 'Upload of %s FINISHED: %s' % (sql_local_full_target, dt.now())
     finally:
-        delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=args.backup_aging_time)
-        delete_local_db_backups(pat, args)
+        delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=backup_aging_time)
+        delete_local_db_backups(pat, db_backups_dir, backup_aging_time)

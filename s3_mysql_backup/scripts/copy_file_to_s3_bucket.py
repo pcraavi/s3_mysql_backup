@@ -21,4 +21,4 @@ def cp_file():
     """
 
     args = parser.parse_args()
-    copy_file(args)
+    copy_file(args.aws_access_key_id, args.aws_secret_access_key, args.bucket_name, args.file, args.s3_folder)

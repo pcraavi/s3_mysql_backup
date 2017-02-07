@@ -13,16 +13,16 @@ TIMESTAMP_FORMAT = '%Y-%m-%d-%H-%M-%S'
 DIR_CREATE_TIME_FORMAT = '%a %b %d %H:%M:%S %Y'
 
 
-def s3_conn(args):
-    return boto.connect_s3(args.aws_access_key_id, args.aws_secret_access_key, is_secure=False)
+def s3_conn(aws_access_key_id, aws_secret_access_key):
+    return boto.connect_s3(aws_access_key_id, aws_secret_access_key, is_secure=False)
 
 
-def s3_bucket(args):
+def s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name):
     """
     connect to S3, return connection key and bucket list
     """
 
-    return s3_conn(args).get_bucket(args.bucket_name)
+    return s3_conn(aws_access_key_id, aws_secret_access_key).get_bucket(bucket_name)
 
 
 def get_local_backups_by_pattern(pat, dir):
@@ -55,11 +55,11 @@ def delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=
                 bucket.delete_key(f.name)
 
 
-def download_last_db_backup(args):
+def download_last_db_backup(pat, bucketlist, bucket_name, db_backups_dir):
     matches = []
-    print('looking for pat "%s" in bucket %s' % (args.pat, args.bucket_name))
-    for f in args.bucketlist:
-        if re.match(args.pat, f.name):
+    print('Looking for pat "%s" in bucket %s' % (pat, bucket_name))
+    for f in bucketlist:
+        if re.match(pat, f.name):
             print('%s matches' % f.name)
             bk_date = dt.strptime(f.name[0:19], TIMESTAMP_FORMAT)
             matches.append({
@@ -69,7 +69,7 @@ def download_last_db_backup(args):
             })
     if matches:
         last_bk = sorted(matches, key=operator.itemgetter('date'))[0]
-        dest = os.path.join(args.db_backups_dir, last_bk['file'])
+        dest = os.path.join(db_backups_dir, last_bk['file'])
         if not os.path.exists(dest):
             last_bk['key'].get_contents_to_filename(dest)
             print('Downloaded %s to %s' % (f.name, dest))
@@ -79,13 +79,12 @@ def download_last_db_backup(args):
         print('no matches')
 
 
-def delete_local_zip_backups(pat, args):
+def delete_local_zip_backups(pat, zip_backups_dir, backup_aging_time):
     #
     # Delete old local backups
     #
-
-    backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
-    for dirName, subdirList, filelist in os.walk(args.zip_backups_dir, topdown=False):
+    backup_expiration_date = dt.now() - td(days=backup_aging_time)
+    for dirName, subdirList, filelist in os.walk(zip_backups_dir, topdown=False):
         for f in filelist:
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
@@ -94,13 +93,13 @@ def delete_local_zip_backups(pat, args):
                     os.remove(os.path.join(dirName, f))
 
 
-def delete_local_db_backups(pat, args):
+def delete_local_db_backups(pat, db_backups_dir, backup_aging_time):
     #
     # Delete old local backups
     #
 
-    backup_expiration_date = dt.now() - td(days=args.backup_aging_time)
-    for dirName, subdirList, filelist in os.walk(args.db_backups_dir, topdown=False):
+    backup_expiration_date = dt.now() - td(days=backup_aging_time)
+    for dirName, subdirList, filelist in os.walk(db_backups_dir, topdown=False):
         for f in filelist:
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
