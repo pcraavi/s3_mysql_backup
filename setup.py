@@ -23,7 +23,7 @@ setup(
     # Versions should comply with PEP440.  For a discussion on single-sourcing
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version='0.0.35',
+    version='0.0.36',
 
     description='Utility Library for Backing up MySQL to S3',
     long_description=long_description,
@@ -109,9 +109,10 @@ setup(
             's3-backup-gnucash=s3_mysql_backup.scripts.backup_gnucash:backup',
             's3-backup-dir=s3_mysql_backup.scripts.backup_dir:backup',
             's3-get-dir-backup=s3_mysql_backup.scripts.get_dir_backup:get_dir_backup',
+            's3-backup-mysql-db=s3_mysql_backup.scripts.backup_mysql_db:backup_db',
         ],
     },
-    scripts = ['s3_mysql_backup/scripts/backup-mysql-db.py'],
+    scripts = [],
     setup_requires=['pytest-runner', ],
     tests_require=['pytest', ],
 )
