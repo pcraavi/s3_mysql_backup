@@ -52,7 +52,7 @@ def backup_db(
     cmd = '/usr/bin/mysqldump -h%s -P%s -u%s -p%s %s ' % (mysql_host, mysql_port, db_user, db_pass, database)
     print(cmd)
     subprocess.call(cmd.split(), stdout=f)
-    cmd = '/usr/bin/bzip2 %s' % sql_full_target
+    cmd = 'bzip2 %s' % sql_full_target
     print(cmd)
     subprocess.call(cmd.split())
     sql_local_full_target = sql_full_target
