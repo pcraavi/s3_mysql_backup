@@ -41,9 +41,9 @@ def backup(aws_access_key_id, aws_secret_access_key, bucket_name):
         g_bks = sorted(g_bks, key=lambda k: k['date'], reverse=True)
         if g_bks[0]['filename'] not in s3_backup_names:
             key.key = g_bks[0]['filename']
-            print 'Uploading to bucket %s STARTING %s to %s: %s' % (
-                args.bucket_name, g_bks[0]['filename'], key.key, dt.now())
-            key.set_contents_from_filename(g_bks[0]['fullpath'])
-            print 'Upload %s FINISHED: %s' % (g_bks[0]['filename'], dt.now())
+            print('Uploading to bucket %s STARTING %s to %s: %s' % (
+                args.bucket_name, g_bks[0]['filename'], key.key, dt.now()),
+                key.set_contents_from_filename(g_bks[0]['fullpath']))
+            print('Upload %s FINISHED: %s' % (g_bks[0]['filename'], dt.now()))
     delete_old_s3_gnu_backups(args.backup_aging_time, s3_backups, bucket)
 

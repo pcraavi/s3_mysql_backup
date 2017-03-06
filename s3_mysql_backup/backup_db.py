@@ -45,7 +45,7 @@ def backup_db(
     pat = "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-[0-9][0-9]-%s.sql.bz2" % database
 
     sql_file = '%s-%s.sql' % (dt.now().strftime(TIMESTAMP_FORMAT), database)
-    print 'Dumping database %s to %s.bz2' % (database, sql_file)
+    print('Dumping database %s to %s.bz2' % (database, sql_file))
 
     sql_full_target = os.path.join(db_backups_dir, sql_file)
     f = open(sql_full_target, "wb")
@@ -58,10 +58,10 @@ def backup_db(
     sql_local_full_target = sql_full_target
     # append '.bz2'
     key.key = os.path.join(s3_folder, '%s.bz2' % sql_file)
-    print 'STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now())
+    print('STARTING upload of %s to %s: %s' % (sql_file, key.key, dt.now()))
     try:
         key.set_contents_from_filename('%s.bz2' % os.path.join(db_backups_dir, sql_full_target))
-        print 'Upload of %s FINISHED: %s' % (sql_local_full_target, dt.now())
+        print('Upload of %s FINISHED: %s' % (sql_local_full_target, dt.now()))
     finally:
         delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=backup_aging_time)
         delete_local_db_backups(pat, db_backups_dir, backup_aging_time)

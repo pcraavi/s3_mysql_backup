@@ -44,8 +44,8 @@ def backup():
         qb_bks = sorted(qb_bks, key=lambda k: k['date'], reverse=True)
         if qb_bks[0]['filename'] not in s3_backup_names:
             key.key = qb_bks[0]['filename']
-            print 'uploading STARTING %s to %s: %s' % (qb_bks[0]['filename'], key.key, dt.now())
-            key.set_contents_from_filename(qb_bks[0]['fullpath'])
-            print 'upload %s FINISHED: %s' % (qb_bks[0]['filename'], dt.now())
+            print('uploading STARTING %s to %s: %s' % (qb_bks[0]['filename'], key.key, dt.now()),
+                key.set_contents_from_filename(qb_bks[0]['fullpath']))
+            print('upload %s FINISHED: %s' % (qb_bks[0]['filename'], dt.now()))
 
     delete_old_s3_qb_backups(args.backup_aging_time, s3_backups, bucket)

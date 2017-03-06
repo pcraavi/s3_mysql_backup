@@ -50,7 +50,7 @@ def delete_expired_backups_in_bucket(bucket, bucketlist, pat, backup_aging_time=
         if re.match(pat, os.path.basename(filename)):
             bk_date = dt.strptime(os.path.basename(filename)[0:19], TIMESTAMP_FORMAT)
             if bk_date < backup_expiration_date:
-                print 'Removing old S3 backup %s' % filename
+                print('Removing old S3 backup %s' % filename)
 
                 bucket.delete_key(f.name)
 
@@ -89,7 +89,7 @@ def delete_local_zip_backups(pat, zip_backups_dir, backup_aging_time):
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
                 if bk_date < backup_expiration_date:
-                    print 'Removing old local backup %s' % f
+                    print('Removing old local backup %s' % f)
                     os.remove(os.path.join(dirName, f))
 
 
@@ -104,7 +104,7 @@ def delete_local_db_backups(pat, db_backups_dir, backup_aging_time):
             if re.search(pat, f):
                 bk_date = dt.strptime(f[0:19], TIMESTAMP_FORMAT)
                 if bk_date < backup_expiration_date:
-                    print 'Removing old local backup %s' % f
+                    print('Removing old local backup %s' % f)
                     os.remove(os.path.join(dirName, f))
 
 

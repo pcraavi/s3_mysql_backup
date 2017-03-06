@@ -23,7 +23,7 @@ def delete_old_s3_gnu_backups(backup_aging_time, s3_backups, bucket):
     for f in s3_backups[0:len(s3_backups) - 2]:
         if gnu_file_date(f.name) < dt.now() - td(backup_aging_time):
             bucket.delete_key(f.name)
-            print 'Deleted %s ' % f.name
+            print('Deleted %s ' % f.name)
 
 
 def delete_old_s3_qb_backups(backup_aging_time, s3_backups, bucket):
@@ -32,7 +32,7 @@ def delete_old_s3_qb_backups(backup_aging_time, s3_backups, bucket):
     for f in s3_backups[0:len(s3_backups) - 2]:
         if qb_file_date(f.name) < dt.now() - td(backup_aging_time):
             bucket.delete_key(f.name)
-            print 'Deleted %s ' % f.name
+            print('Deleted %s ' % f.name)
 
 
 def existing_backups(bucket, pat):
