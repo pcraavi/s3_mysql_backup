@@ -12,18 +12,20 @@ from s3_mysql_backup.backup_file import existing_backups
 parser = argparse.ArgumentParser(description='S3 Gnucach Backups')
 
 parser.add_argument('--gdir', help='Gnucash backup directory',
-                    default='c:/Users/marc/Desktop/accounting/GnuCash/')
+                    default='c:/Users/marc/Desktop/accounting/')
 parser.add_argument('--bucket-name', help='Bucket Name', default='ameliaqb')
 parser.add_argument('--aws-access-key-id', required=True, help='AWS_ACCESS_KEY_ID', default='rrg')
 parser.add_argument('--aws-secret-access-key', required=True, help='AWS_SECRET_ACCESS_KEY', default='deadbeef')
 parser.add_argument('--backup-aging-time', help='delete backups older than backup-aging-time', default=30)
 
-pat = "Personal041008.[0-9]*.gnucash.[0-9]*.gnucash.[0-9]*.gnucash$"
+pat = "Personal\.gnucash\.[0-9]*.gnucash$"
 
 
-def backup(aws_access_key_id, aws_secret_access_key, bucket_name):
+def backup():
+    """"""
+
     args = parser.parse_args()
-    bucket = s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name)
+    bucket = s3_bucket(args.aws_access_key_id, args.aws_secret_access_key, args.bucket_name)
     key = boto.s3.key.Key(bucket)
     #
     # Get list of local QB and Gnucash Backups

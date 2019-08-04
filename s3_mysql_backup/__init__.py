@@ -26,6 +26,7 @@ def s3_bucket(aws_access_key_id, aws_secret_access_key, bucket_name):
 
 
 def get_local_backups_by_pattern(pat, dir):
+    """"""
     bks = []
 
     for dirname, dirnames, filenames in os.walk(dir):

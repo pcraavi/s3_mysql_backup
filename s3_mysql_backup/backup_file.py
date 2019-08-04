@@ -10,7 +10,7 @@ qb_date_format = '%b %d,%Y  %I %M %p'
 
 
 def gnu_file_date(fname):
-    return dt.strptime(fname[61:len(fname) - 8], gnu_date_format)
+    return dt.strptime(fname[38:len(fname) - 8], gnu_date_format)
 
 
 def qb_file_date(fname):
